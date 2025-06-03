@@ -2,6 +2,7 @@ import "./pages/index.css";
 import { initialCards } from "./components/cards.js";
 import { createCard, handleDeleteCard, handleLikeClick } from "./components/card.js";
 import { openPopup, closePopup, setupPopupCloseListeners } from "./components/modal.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
 
 const cardsContainer = document.querySelector(".places__list");
 const popupEdit = document.querySelector(".popup_type_edit");
@@ -17,6 +18,20 @@ const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const cardTitleInput = newCardForm.querySelector('.popup__input_type_card-name');
 const cardUrlInput = newCardForm.querySelector('.popup__input_type_url');
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'form__input-error_active'
+};
+
+enableValidation(validationConfig);
+
+// Пример очистки валидации конкретной формы
+clearValidation(profileForm, validationConfig);
 
 function handleImageClick(name, link) {
   const popupImgElement = popupImage.querySelector(".popup__image");

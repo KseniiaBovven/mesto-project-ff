@@ -20,3 +20,44 @@
     line-height: 15px;
   }
 }
+
+/* Стили для поля ввода с ошибкой */
+.popup__input_type_error {
+  border-bottom: 1px solid #FF0000; /* Красная рамка для невалидного поля */
+}
+
+/* Стили для текста ошибки */
+.form__input-error {
+  color: #FF0000; /* Красный цвет текста */
+  font-size: 12px;
+  line-height: 1.25;
+  margin-top: 5px;
+  min-height: 30px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Стили для видимого текста ошибки */
+.form__input-error_active {
+  opacity: 1;
+}
+
+/* Стили для неактивной кнопки */
+.popup__button_disabled {
+  background-color: #FFFFFF;
+  color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: default;
+}
+
+.popup__button_disabled:hover {
+  background-color: #FFFFFF; /* Отключаем эффект наведения */
+}
+
+/* Базовые стили для полей ввода (не связанные с валидацией) */
+
+.popup__input:focus {
+  border-bottom-color: #000000;
+}
+
+/* Базовые стили для кнопки (не связанные с валидацией) */
