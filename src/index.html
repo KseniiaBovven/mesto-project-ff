@@ -50,9 +50,6 @@
               class="popup__input popup__input_type_name"
               placeholder="Имя"
               required
-              pattern="[A-Za-zА-Яа-яЁё\s-]+"
-              data-error-pattern="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
-              data-error-required="Это поле обязательно"
               minlength="2"
               maxlength="40"
             />
@@ -64,9 +61,6 @@
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
               required
-              pattern="[A-Za-zА-Яа-яЁё\s-]+"
-              data-error-pattern="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
-              data-error-required="Это поле обязательно"
               minlength="2"
               maxlength="200"
             />
@@ -83,19 +77,25 @@
           <h3 class="popup__title">Новое место</h3>
           <form class="popup__form" name="new-place">
             <input
+              id="place-input"
               type="text"
               name="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
               required
+              minlength="2"
+              maxlength="30"
             />
+            <span class="place-input-error form__input-error"></span>
             <input
+              id="link-input"
               type="url"
               name="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
               required
             />
+            <span class="link-input-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>

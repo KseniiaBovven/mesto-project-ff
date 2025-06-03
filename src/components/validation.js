@@ -1,55 +1,49 @@
+// Конфигурация по умолчанию
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'form__input-error_active'
+};
+
 // Показать ошибку валидации
-const showInputError = (formElement, inputElement, errorMessage, { inputErrorClass, errorClass }) => {
+const showInputError = (formElement, inputElement, errorMessage, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.add(inputErrorClass);
+  inputElement.classList.add(config.inputErrorClass);
   errorElement.textContent = errorMessage;
-  errorElement.classList.add(errorClass);
+  errorElement.classList.add(config.errorClass);
 };
 
 // Скрыть ошибку валидации
-const hideInputError = (formElement, inputElement, { inputErrorClass, errorClass }) => {
+const hideInputError = (formElement, inputElement, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove(inputErrorClass);
+  inputElement.classList.remove(config.inputErrorClass);
   errorElement.textContent = '';
-  errorElement.classList.remove(errorClass);
+  errorElement.classList.remove(config.errorClass);
 };
 
-// Проверить на недопустимые символы
-const hasInvalidChars = (inputElement) => {
-  if (!inputElement.pattern) return false;
-  const pattern = new RegExp(`^${inputElement.pattern}$`);
-  return !pattern.test(inputElement.value);
-};
+// Паттерны и сообщения
+const textInputPattern = /^[a-zA-Zа-яёА-ЯЁ\s-]+$/;
+const urlInputPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
+const textInputErrorMessage = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы";
+const urlInputErrorMessage = "Введите адрес сайта";
 
 // Проверить валидность поля
-const checkInputValidity = (formElement, inputElement, config) => {
-  if (inputElement.validity.valueMissing) {
-    showInputError(
-      formElement,
-      inputElement,
-      inputElement.dataset.errorRequired || 'Это поле обязательно',
-      config
-    );
+const checkInputValidity = (inputElement, formElement, config) => {
+  if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement, inputElement.validationMessage, config);
     return false;
   }
 
-  if (hasInvalidChars(inputElement)) {
-    showInputError(
-      formElement,
-      inputElement,
-      inputElement.dataset.errorMessage || 'Недопустимые символы',
-      config
-    );
+  if (inputElement.type === "url" && !urlInputPattern.test(inputElement.value)) {
+    showInputError(formElement, inputElement, urlInputErrorMessage, config);
     return false;
   }
 
-  if (inputElement.validity.tooShort || inputElement.validity.tooLong) {
-    showInputError(
-      formElement,
-      inputElement,
-      inputElement.validationMessage,
-      config
-    );
+  if (inputElement.type === "text" && !textInputPattern.test(inputElement.value)) {
+    showInputError(formElement, inputElement, textInputErrorMessage, config);
     return false;
   }
 
@@ -58,13 +52,21 @@ const checkInputValidity = (formElement, inputElement, config) => {
 };
 
 // Переключить состояние кнопки
-const toggleButtonState = (inputList, buttonElement, { inactiveButtonClass }) => {
-  const hasInvalidInput = inputList.some(inputElement => 
-    !inputElement.validity.valid || hasInvalidChars(inputElement)
-  );
+const toggleButtonState = (inputList, buttonElement, config) => {
+  const hasInvalidInput = inputList.some(inputElement => {
+    const isTextValid = inputElement.type === 'text' 
+      ? textInputPattern.test(inputElement.value)
+      : true;
+    
+    const isUrlValid = inputElement.type === 'url'
+      ? urlInputPattern.test(inputElement.value)
+      : true;
+    
+    return !inputElement.validity.valid || !isTextValid || !isUrlValid;
+  });
   
   buttonElement.disabled = hasInvalidInput;
-  buttonElement.classList.toggle(inactiveButtonClass, hasInvalidInput);
+  buttonElement.classList.toggle(config.inactiveButtonClass, hasInvalidInput);
 };
 
 // Установить обработчики событий
@@ -74,7 +76,7 @@ const setEventListeners = (formElement, config) => {
 
   inputList.forEach(inputElement => {
     inputElement.addEventListener('input', () => {
-      checkInputValidity(formElement, inputElement, config);
+      checkInputValidity(inputElement, formElement, config);
       toggleButtonState(inputList, buttonElement, config);
     });
   });
@@ -83,7 +85,7 @@ const setEventListeners = (formElement, config) => {
 };
 
 // Включить валидацию всех форм
-export const enableValidation = (config) => {
+export const enableValidation = (config = validationConfig) => {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
   formList.forEach(formElement => {
     setEventListeners(formElement, config);
@@ -91,13 +93,12 @@ export const enableValidation = (config) => {
 };
 
 // Очистить валидацию формы
-export const clearValidation = (formElement, config) => {
+export const clearValidation = (formElement, config = validationConfig) => {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
   inputList.forEach(inputElement => {
     hideInputError(formElement, inputElement, config);
-    inputElement.value = '';
   });
 
   buttonElement.disabled = true;
