@@ -40,19 +40,6 @@
 }
 
 
-.popup__button_inactive {
-  background: none;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  color: rgba(0, 0, 0, 0.2);
-  cursor: default;
-  pointer-events: none;
-  transition: none;
-}
-
-.popup__button_inactive:hover {
-  background-color: #FFFFFF; 
-}
-
 .popup__input:focus {
   border-bottom-color: #000000;
 }

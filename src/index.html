@@ -18,12 +18,13 @@
           class="logo header__logo"
         />
       </header>
-      <main class="content">
+     <main class="content">
         <section class="profile page__section">
           <div
             class="profile__image"
-            style="background-image: url(<%=require('./images/avatar.jpg')%>)"
-          ></div>
+          >
+            <div class="profile__image-overlay"></div>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Жак-Ив Кусто</h1>
             <button class="profile__edit-button" type="button"></button>
@@ -42,7 +43,7 @@
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
+          <form class="popup__form" name="edit-profile" novalidate>
             <input
               id="name-input"
               type="text"
@@ -71,11 +72,30 @@
           </form>
         </div>
       </div>
+       <div class="popup popup_type_update-avatar popup_is-animated">
+        <div class="popup__content popup__content_update-avatar">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Обновить аватар</h3>
+          <form class="popup__form" name="update-avatar" novalidate>
+            <input
+              type="url"
+              name="link"
+              class="popup__input popup__input_type_url"
+              placeholder="Ссылка на аватар"
+              required
+            />
+            <span class="form__input-error popup__error_type_link"></span>
+            <button type="submit" class="button popup__button">
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </div>
       <div class="popup popup_type_new-card popup_is-animated">
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Новое место</h3>
-          <form class="popup__form" name="new-place">
+          <form class="popup__form" name="new-place" novalidate>
             <input
               id="place-input"
               type="text"

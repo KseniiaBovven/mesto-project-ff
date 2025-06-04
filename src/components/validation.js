@@ -1,13 +1,3 @@
-// Конфигурация по умолчанию
-const validationConfig = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_inactive',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'form__input-error_active'
-};
-
 // Показать ошибку валидации
 const showInputError = (formElement, inputElement, errorMessage, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -85,7 +75,7 @@ const setEventListeners = (formElement, config) => {
 };
 
 // Включить валидацию всех форм
-export const enableValidation = (config = validationConfig) => {
+export const enableValidation = (config) => {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
   formList.forEach(formElement => {
     setEventListeners(formElement, config);
@@ -93,7 +83,7 @@ export const enableValidation = (config = validationConfig) => {
 };
 
 // Очистить валидацию формы
-export const clearValidation = (formElement, config = validationConfig) => {
+export const clearValidation = (formElement, config) => {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
