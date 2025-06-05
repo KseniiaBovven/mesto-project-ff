@@ -1,19 +1,28 @@
-// Показать ошибку валидации
 const showInputError = (formElement, inputElement, errorMessage, config) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+   const errorSelector = `.${inputElement.name}-error, .${inputElement.id}-error`;
+  const errorElement = formElement.querySelector(errorSelector);
+  
+  if (!errorElement) {
+    console.error('Элемент ошибки не найден для:', inputElement);
+    return;
+  }
+
   inputElement.classList.add(config.inputErrorClass);
   errorElement.textContent = errorMessage;
   errorElement.classList.add(config.errorClass);
 };
 
-// Скрыть ошибку валидации
 const hideInputError = (formElement, inputElement, config) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove(config.inputErrorClass);
-  errorElement.textContent = '';
-  errorElement.classList.remove(config.errorClass);
+  const errorElement = 
+    formElement.querySelector(`#${inputElement.id}-error`) ||
+    formElement.querySelector(`.${inputElement.name}-error`);
+    
+  if (errorElement) {
+    inputElement.classList.remove(config.inputErrorClass);
+    errorElement.textContent = '';
+    errorElement.classList.remove(config.errorClass);
+  }
 };
-
 // Паттерны и сообщения
 const textInputPattern = /^[a-zA-Zа-яёА-ЯЁ\s-]+$/;
 const urlInputPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
@@ -84,13 +93,29 @@ export const enableValidation = (config) => {
 
 // Очистить валидацию формы
 export const clearValidation = (formElement, config) => {
+  if (!formElement) {
+    console.error('Форма не найдена');
+    return;
+  }
+
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
   inputList.forEach(inputElement => {
-    hideInputError(formElement, inputElement, config);
+    const errorSelector = `.${inputElement.name}-error, .${inputElement.id}-error`;
+    const errorElement = formElement.querySelector(errorSelector);
+    
+    if (errorElement) {
+      inputElement.classList.remove(config.inputErrorClass);
+      errorElement.textContent = '';
+      errorElement.classList.remove(config.errorClass);
+    }
   });
 
-  buttonElement.disabled = true;
-  buttonElement.classList.add(config.inactiveButtonClass);
+    if (buttonElement) {
+    const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
+    const hasInvalidInput = inputList.some(inputElement => !inputElement.validity.valid);
+    buttonElement.disabled = hasInvalidInput;
+    buttonElement.classList.toggle(config.inactiveButtonClass, hasInvalidInput);
+  }
 };

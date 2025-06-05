@@ -18,11 +18,9 @@
           class="logo header__logo"
         />
       </header>
-     <main class="content">
+      <main class="content">
         <section class="profile page__section">
-          <div
-            class="profile__image"
-          >
+          <div class="profile__image">
             <div class="profile__image-overlay"></div>
           </div>
           <div class="profile__info">
@@ -54,7 +52,7 @@
               minlength="2"
               maxlength="40"
             />
-            <span class="name-input-error form__input-error"></span>
+            <span id="name-error" class="name-input-error form__input-error"></span>
             <input
               id="description-input"
               type="text"
@@ -65,26 +63,27 @@
               minlength="2"
               maxlength="200"
             />
-            <span class="description-input-error form__input-error"></span>
+            <span id="description-error" class="description-input-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
           </form>
         </div>
       </div>
-       <div class="popup popup_type_update-avatar popup_is-animated">
+      <div class="popup popup_type_update-avatar popup_is-animated">
         <div class="popup__content popup__content_update-avatar">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Обновить аватар</h3>
           <form class="popup__form" name="update-avatar" novalidate>
             <input
+              id="avatar-input" 
               type="url"
               name="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на аватар"
               required
             />
-            <span class="form__input-error popup__error_type_link"></span>
+            <span id="avatar-error" class="form__input-error avatar-input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -106,7 +105,7 @@
               minlength="2"
               maxlength="30"
             />
-            <span class="place-input-error form__input-error"></span>
+            <span id="place-errror" class="place-input-error form__input-error"></span>
             <input
               id="link-input"
               type="url"
@@ -115,7 +114,7 @@
               placeholder="Ссылка на картинку"
               required
             />
-            <span class="link-input-error form__input-error"></span>
+            <span id="link-error" class="link-input-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -137,7 +136,10 @@
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
+          <div class="card__button-container">
+            <button type="button" class="card__like-button"></button>
+            <span class="card__likes"></span>
+          </div>
         </div>
       </li>
     </template>
