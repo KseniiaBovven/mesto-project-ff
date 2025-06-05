@@ -2,7 +2,6 @@ import "./pages/index.css";
 import {
   createCard,
   handleDeleteCard,
-  handleLikeClick,
 } from "./components/card.js";
 import {
   openPopup,
@@ -46,6 +45,7 @@ const updateUserAvatarForm = document.forms["update-avatar"];
 const saving = "Сохранение...";
 const avatarEditButton = document.querySelector(".profile__image-overlay");
 const popupUpdateAvatar = document.querySelector(".popup_type_update-avatar");
+const avatarInput = updateUserAvatarForm.elements["avatar-input"];
 
 const validationConfig = {
   formSelector: ".popup__form",
@@ -96,14 +96,14 @@ function handleLikeCard(likeButton, likeCounter, cardId) {
     .catch((err) => {
       console.error("Ошибка при обновлении лайка:", err);
     });
-}
+};
 
 function handleEditForm(evt) {
   evt.preventDefault();
   const formButton = profileForm.querySelector(
     validationConfig.submitButtonSelector
   );
-  const buttonOrigText = formButton.textContent;
+  const buttonOriginalText = formButton.textContent;
   formButton.textContent = saving;
   updateUserInfo(editProfileFormName.value, editProfileFormDescription.value)
     .then((updatedUserInfo) => {
@@ -112,47 +112,35 @@ function handleEditForm(evt) {
       closePopup(popupEdit);
     })
     .finally(() => {
-      formButton.textContent = buttonOrigText;
+      formButton.textContent = buttonOriginalText;
     });
-}
+};
 
-function handleAvatarForm(evt) {
+const handleAvatarForm = (evt) => {
   evt.preventDefault();
-  const avatarUrl = updateUserAvatarForm.elements.link.value;
   const formButton = updateUserAvatarForm.querySelector(
     validationConfig.submitButtonSelector
   );
-  const buttonOrigText = formButton.textContent;
-  formButton.textContent = saving;
-  fetch(avatarUrl, { method: "HEAD" })
-    .then((res) => {
-      if (!res.ok) {
-        return Promise.reject(`${res.status}`);
-      }
-      const contentType = res.headers.get("Content-Type");
-      if (!contentType || !contentType.startsWith("image/")) {
-        return Promise.reject("ссылка не является изображением");
-      }
-      return updateUserAvatar(avatarUrl);
-    })
-    .then(() => {
-      profileAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+  const buttonOriginalText = formButton.textContent;
+  formButton.textContent = 'Сохранение...';
+  updateUserAvatar(avatarInput.value)
+    .then((data) => {
+      document.querySelector(".profile__image").style.backgroundImage = `url(${data.avatar})`;
       closePopup(popupUpdateAvatar);
-      updateUserAvatarForm.reset();
     })
     .catch((err) => {
       console.log(`Ошибка: ${err}`);
     })
     .finally(() => {
-      formButton.textContent = buttonOrigText;
+      formButton.textContent = buttonOriginalText;
     });
-}
+};
 
 function openAvatarPopup() {
   updateUserAvatarForm.reset();
   clearValidation(updateUserAvatarForm, validationConfig);
   openPopup(popupUpdateAvatar);
-}
+};
 
 function handleImageClick(name, link) {
   const popupImgElement = popupImage.querySelector(".popup__image");
@@ -163,14 +151,14 @@ function handleImageClick(name, link) {
   popupImgCaption.textContent = name;
 
   openPopup(popupImage);
-}
+};
 
 function openEditPopup() {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
   clearValidation(profileForm, validationConfig);
   openPopup(popupEdit);
-}
+};
 
 function handleNewCardAddSubmit(evt) {
   evt.preventDefault();
@@ -192,7 +180,7 @@ function handleNewCardAddSubmit(evt) {
         serverCardData,
         deleteCardNew,
         handleImageClick,
-        handleLikeClick,
+        handleLikeCard,
         serverCardData.owner._id
       );
       cardsContainer.prepend(cardElement);
@@ -205,7 +193,7 @@ function handleNewCardAddSubmit(evt) {
     .finally(() => {
       formButton.textContent = buttonOrigText;
     });
-}
+};
 
 updateUserAvatarForm.addEventListener("submit", handleAvatarForm);
 
@@ -223,7 +211,6 @@ function init() {
 }
 
 init();
-
 
 const deleteCardNew = (curCard, curCardId) => {
   deleteCard(curCardId)

@@ -1,28 +1,21 @@
 const showInputError = (formElement, inputElement, errorMessage, config) => {
-   const errorSelector = `.${inputElement.name}-error, .${inputElement.id}-error`;
-  const errorElement = formElement.querySelector(errorSelector);
-  
-  if (!errorElement) {
-    console.error('Элемент ошибки не найден для:', inputElement);
-    return;
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error, .${inputElement.name}-error`);
+  if (errorElement) {
+    errorElement.textContent = errorMessage;
+    errorElement.style.display = 'block';
+    inputElement.classList.add(config.inputErrorClass);
   }
-
-  inputElement.classList.add(config.inputErrorClass);
-  errorElement.textContent = errorMessage;
-  errorElement.classList.add(config.errorClass);
 };
 
 const hideInputError = (formElement, inputElement, config) => {
-  const errorElement = 
-    formElement.querySelector(`#${inputElement.id}-error`) ||
-    formElement.querySelector(`.${inputElement.name}-error`);
-    
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error, .${inputElement.name}-error`);
   if (errorElement) {
-    inputElement.classList.remove(config.inputErrorClass);
     errorElement.textContent = '';
-    errorElement.classList.remove(config.errorClass);
+    errorElement.style.display = 'none';
+    inputElement.classList.remove(config.inputErrorClass);
   }
 };
+
 // Паттерны и сообщения
 const textInputPattern = /^[a-zA-Zа-яёА-ЯЁ\s-]+$/;
 const urlInputPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
@@ -31,6 +24,8 @@ const urlInputErrorMessage = "Введите адрес сайта";
 
 // Проверить валидность поля
 const checkInputValidity = (inputElement, formElement, config) => {
+  hideInputError(formElement, inputElement, config);
+  
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage, config);
     return false;
@@ -46,7 +41,6 @@ const checkInputValidity = (inputElement, formElement, config) => {
     return false;
   }
 
-  hideInputError(formElement, inputElement, config);
   return true;
 };
 
@@ -75,8 +69,18 @@ const setEventListeners = (formElement, config) => {
 
   inputList.forEach(inputElement => {
     inputElement.addEventListener('input', () => {
-      checkInputValidity(inputElement, formElement, config);
+      const isValid = checkInputValidity(inputElement, formElement, config);
       toggleButtonState(inputList, buttonElement, config);
+      
+      if (inputElement.type === 'url') {
+        if (urlInputPattern.test(inputElement.value)) {
+          hideInputError(formElement, inputElement, config);
+        }
+      }
+    });
+    
+    inputElement.addEventListener('blur', () => {
+      checkInputValidity(inputElement, formElement, config);
     });
   });
 

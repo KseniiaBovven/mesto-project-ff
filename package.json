@@ -4,8 +4,10 @@
   "description": "\"Project\"",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack serve",
     "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,8 @@
   "homepage": "https://github.com/KseniiaBovven/mesto-project-ff#readme",
   "dependencies": {
     "core-js": "^3.42.0",
+    "install": "^0.13.0",
+    "npm": "^11.4.1",
     "webpack": "^5.99.8"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "cssnano": "^7.0.7",
+    "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss-loader": "^8.1.1",

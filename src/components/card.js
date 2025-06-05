@@ -48,7 +48,3 @@ export function createCard(
 export function handleDeleteCard(cardElement) {
   cardElement.remove();
 }
-
-export function handleLikeClick(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
-}
