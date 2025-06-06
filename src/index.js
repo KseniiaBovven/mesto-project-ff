@@ -1,8 +1,5 @@
 import "./pages/index.css";
-import {
-  createCard,
-  handleDeleteCard,
-} from "./components/card.js";
+import { createCard, handleDeleteCard } from "./components/card.js";
 import {
   openPopup,
   closePopup,
@@ -57,7 +54,6 @@ const validationConfig = {
 };
 
 enableValidation(validationConfig);
-clearValidation(form, validationConfig);
 
 Promise.all([getUserInfo(), getInitialCards()])
   .then((results) => {
@@ -96,7 +92,7 @@ function handleLikeCard(likeButton, likeCounter, cardId) {
     .catch((err) => {
       console.error("Ошибка при обновлении лайка:", err);
     });
-};
+}
 
 function handleEditForm(evt) {
   evt.preventDefault();
@@ -114,7 +110,7 @@ function handleEditForm(evt) {
     .finally(() => {
       formButton.textContent = buttonOriginalText;
     });
-};
+}
 
 const handleAvatarForm = (evt) => {
   evt.preventDefault();
@@ -122,10 +118,12 @@ const handleAvatarForm = (evt) => {
     validationConfig.submitButtonSelector
   );
   const buttonOriginalText = formButton.textContent;
-  formButton.textContent = 'Сохранение...';
+  formButton.textContent = "Сохранение...";
   updateUserAvatar(avatarInput.value)
     .then((data) => {
-      document.querySelector(".profile__image").style.backgroundImage = `url(${data.avatar})`;
+      document.querySelector(
+        ".profile__image"
+      ).style.backgroundImage = `url(${data.avatar})`;
       closePopup(popupUpdateAvatar);
     })
     .catch((err) => {
@@ -140,7 +138,7 @@ function openAvatarPopup() {
   updateUserAvatarForm.reset();
   clearValidation(updateUserAvatarForm, validationConfig);
   openPopup(popupUpdateAvatar);
-};
+}
 
 function handleImageClick(name, link) {
   const popupImgElement = popupImage.querySelector(".popup__image");
@@ -151,14 +149,14 @@ function handleImageClick(name, link) {
   popupImgCaption.textContent = name;
 
   openPopup(popupImage);
-};
+}
 
 function openEditPopup() {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
   clearValidation(profileForm, validationConfig);
   openPopup(popupEdit);
-};
+}
 
 function handleNewCardAddSubmit(evt) {
   evt.preventDefault();
@@ -185,6 +183,7 @@ function handleNewCardAddSubmit(evt) {
       );
       cardsContainer.prepend(cardElement);
       newCardForm.reset();
+      clearValidation(newCardForm, validationConfig);
       closePopup(popupNewCard);
     })
     .catch((err) => {
@@ -193,15 +192,13 @@ function handleNewCardAddSubmit(evt) {
     .finally(() => {
       formButton.textContent = buttonOrigText;
     });
-};
+}
 
 updateUserAvatarForm.addEventListener("submit", handleAvatarForm);
 
 function init() {
   editButton.addEventListener("click", openEditPopup);
   addButton.addEventListener("click", () => {
-    newCardForm.reset(); 
-    clearValidation(newCardForm, validationConfig); 
     openPopup(popupNewCard);
   });
   profileForm.addEventListener("submit", handleEditForm);
@@ -221,6 +218,3 @@ const deleteCardNew = (curCard, curCardId) => {
       console.log(`Ошибка: ${err}`);
     });
 };
-cardElement
-  .querySelector(".card__delete-button")
-  .addEventListener("click", () => deleteCallback(cardElement, cardData._id));
